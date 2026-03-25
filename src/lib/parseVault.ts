@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { randomUUID } from "crypto";
 import type { Idea, TaskItem } from "./dashboardTypes";
 
 function stripBracketsIdeaTitle(title: string) {
@@ -57,7 +58,8 @@ export async function seedIdeasFromVault(): Promise<Idea[]> {
       .join("\n");
 
     const idea: Idea = {
-      id: slugify(title) || `idea_${Date.now()}`,
+      // Supabase `ideas.id` is a UUID primary key.
+      id: randomUUID(),
       title,
       roi,
       readme: `# ${title}\n\n${readme}`.trim(),

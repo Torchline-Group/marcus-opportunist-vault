@@ -73,6 +73,7 @@ export default function Page() {
   });
 
   const [seedLoaded, setSeedLoaded] = useState(false);
+  const [usingSupabase, setUsingSupabase] = useState(false);
   const [ideaModalOpen, setIdeaModalOpen] = useState(false);
   const [ideaModalTab, setIdeaModalTab] = useState<IdeaModalTab>("tasks");
   const [busy, setBusy] = useState<string | null>(null);
@@ -81,9 +82,48 @@ export default function Page() {
   const selectedIdea = useMemo(() => findById(state.ideas, state.ui.selectedIdeaId), [state.ideas, state.ui.selectedIdeaId]);
   const selectedStore = useMemo(() => findById(state.stores, state.ui.selectedStoreId), [state.stores, state.ui.selectedStoreId]);
 
-  // Seed from vault.md once (if no ideas yet)
+  // Bootstrap from Supabase on first load (fallback to local seed if unavailable)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/opportunist/bootstrap");
+        if (!res.ok) return;
+        const data = await res.json();
+        const nextState = data?.state as DashboardState | undefined;
+        if (!nextState) return;
+
+        if (cancelled) return;
+        setState(nextState);
+        setUsingSupabase(true);
+        setSeedLoaded(true);
+
+        if ((nextState.ideas?.length ?? 0) === 0) {
+          const seedRes = await fetch("/api/opportunist/seed-from-vault", { method: "POST" });
+          if (seedRes.ok) {
+            const res2 = await fetch("/api/opportunist/bootstrap");
+            if (res2.ok) {
+              const data2 = await res2.json();
+              if (!cancelled && data2?.state) setState(data2.state as DashboardState);
+            }
+          }
+        }
+      } catch {
+        // If Supabase isn't configured yet, keep localStorage flow.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Seed from vault.md once (localStorage fallback)
   useEffect(() => {
     if (seedLoaded) return;
+    if (usingSupabase) {
+      setSeedLoaded(true);
+      return;
+    }
     if (state.ideas.length > 0) {
       setSeedLoaded(true);
       return;
@@ -104,12 +144,13 @@ export default function Page() {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seedLoaded]);
+  }, [seedLoaded, usingSupabase]);
 
   // Persist
   useEffect(() => {
+    if (usingSupabase) return;
     saveDashboardState(state);
-  }, [state]);
+  }, [state, usingSupabase]);
 
   const mainTab = state.ui.mainTab;
 
