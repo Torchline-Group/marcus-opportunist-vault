@@ -1,0 +1,5 @@
+{
+  "name": "marcus-opportunist-vault",
+  "scripts": { "dev": "cursor ." },
+  "devDependencies": { "firecrawl": "^latest" }
+}
