@@ -5,7 +5,7 @@ import { seedIdeasFromVault } from "../../../../lib/parseVault";
 export async function POST() {
   const sb = createSupabaseAdmin();
 
-  const tenantRes = await sb.schema("opportunist").from("tenants").select("id").eq("name", "default").single();
+  const tenantRes = await sb.from("tenants").select("id").eq("name", "default").single();
   if (tenantRes.error) {
     return NextResponse.json({ error: tenantRes.error.message }, { status: 500 });
   }
@@ -18,15 +18,15 @@ export async function POST() {
   }
 
   // For single-user flow: wipe + re-seed.
-  const wipe = await sb.schema("opportunist").from("ideas").delete().eq("tenant_id", tenantId);
+  const wipe = await sb.from("ideas").delete().eq("tenant_id", tenantId);
   if (wipe.error) return NextResponse.json({ error: wipe.error.message }, { status: 500 });
 
   await Promise.all([
-    sb.schema("opportunist").from("idea_tasks").delete().eq("tenant_id", tenantId),
-    sb.schema("opportunist").from("idea_sources").delete().eq("tenant_id", tenantId)
+    sb.from("idea_tasks").delete().eq("tenant_id", tenantId),
+    sb.from("idea_sources").delete().eq("tenant_id", tenantId)
   ]);
 
-  const inserted = await sb.schema("opportunist").from("ideas").insert(
+  const inserted = await sb.from("ideas").insert(
     ideas.map((i) => ({
       tenant_id: tenantId,
       id: i.id,
@@ -54,7 +54,7 @@ export async function POST() {
   );
 
   if (sourcesInserts.length) {
-    const srcRes = await sb.schema("opportunist").from("idea_sources").insert(sourcesInserts);
+    const srcRes = await sb.from("idea_sources").insert(sourcesInserts);
     if (srcRes.error) return NextResponse.json({ error: srcRes.error.message }, { status: 500 });
   }
 

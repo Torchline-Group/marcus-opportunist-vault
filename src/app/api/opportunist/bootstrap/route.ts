@@ -5,7 +5,7 @@ import type { DashboardState } from "../../../../lib/dashboardTypes";
 export async function GET() {
   const sb = createSupabaseAdmin();
 
-  const tenantRes = await sb.schema("opportunist").from("tenants").select("id").eq("name", "default").single();
+  const tenantRes = await sb.from("tenants").select("id").eq("name", "default").single();
   if (tenantRes.error) {
     return NextResponse.json({ error: tenantRes.error.message }, { status: 500 });
   }
@@ -13,10 +13,10 @@ export async function GET() {
   const tenantId = tenantRes.data.id as string;
 
   const [storesRes, productsRes, ideasRes, techRes] = await Promise.all([
-    sb.schema("opportunist").from("stores").select("*").eq("tenant_id", tenantId).order("created_at", { ascending: false }),
-    sb.schema("opportunist").from("products").select("*").eq("tenant_id", tenantId).order("created_at", { ascending: false }),
-    sb.schema("opportunist").from("ideas").select("id,title,roi,readme,codebase_url,created_at").eq("tenant_id", tenantId).order("created_at", { ascending: false }),
-    sb.schema("opportunist").from("tech_projects").select("*").eq("tenant_id", tenantId).order("created_at", { ascending: false })
+    sb.from("stores").select("*").eq("tenant_id", tenantId).order("created_at", { ascending: false }),
+    sb.from("products").select("*").eq("tenant_id", tenantId).order("created_at", { ascending: false }),
+    sb.from("ideas").select("id,title,roi,readme,codebase_url,created_at").eq("tenant_id", tenantId).order("created_at", { ascending: false }),
+    sb.from("tech_projects").select("*").eq("tenant_id", tenantId).order("created_at", { ascending: false })
   ]);
 
   if (storesRes.error || productsRes.error || ideasRes.error || techRes.error) {
@@ -29,8 +29,8 @@ export async function GET() {
   // Load tasks + sources for each idea
   const ideaIds = (ideasRes.data ?? []).map((i) => i.id);
   const [tasksRes, sourcesRes] = await Promise.all([
-    sb.schema("opportunist").from("idea_tasks").select("*").eq("tenant_id", tenantId).in("idea_id", ideaIds),
-    sb.schema("opportunist").from("idea_sources").select("*").eq("tenant_id", tenantId).in("idea_id", ideaIds)
+    sb.from("idea_tasks").select("*").eq("tenant_id", tenantId).in("idea_id", ideaIds),
+    sb.from("idea_sources").select("*").eq("tenant_id", tenantId).in("idea_id", ideaIds)
   ]);
 
   const tasksByIdea = new Map<string, any[]>();
