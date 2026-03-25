@@ -54,4 +54,23 @@ marcus-opportunist-vault/
     ├── scraper.js           # Firecrawl logic
     └── deploy.js            # Vercel/Shopify
 
+### 📤 GitHub Setup (One-Time)
+```bash
+# After cloning/creating files
+git init
+git add .
+git commit -m "v1.0 Opportunist Vault"
+git remote add origin https://github.com/YOURNAME/marcus-opportunist-vault.git
+git push -u origin main
+
+
+**Full Flow**:
+1. Create empty GitHub repo **first** (marcus-opportunist-vault)
+2. Local folder → paste all files above
+3. Terminal in folder → run push commands
+4. Repo live → `git clone` anywhere
+
+**Pro Tip**: GitHub Codespaces → "Open in Cursor" → **zero local setup**.
+
+**Do this now** → repo URL ready for cursor.directory submission.[1]
 
