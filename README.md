@@ -41,4 +41,17 @@
 npx create-cursor-opportunist@latest my-vault
 cd
 
+marcus-opportunist-vault/
+├── README.md                 # Paste full README above [code_file:1]
+├── .cursor/
+│   └── mcp.json              # MCP config
+├── vault.md                  # Your ideas vault
+├── workflow_agent.md         # Build steps
+├── system_prompt.md          # Cursor agent brain
+├── .env.example              # Keys template
+├── package.json              # npm deps
+└── scripts/
+    ├── scraper.js           # Firecrawl logic
+    └── deploy.js            # Vercel/Shopify
+
 
