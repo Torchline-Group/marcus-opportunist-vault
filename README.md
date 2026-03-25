@@ -74,3 +74,17 @@ git push -u origin main
 
 **Do this now** → repo URL ready for cursor.directory submission.[1]
 
+## Vercel Deployment + Deployable HTTP
+
+This repo includes a Vercel-ready Next.js app with an HTTP endpoint:
+
+- `GET /api/scrape` → usage/help
+- `POST /api/scrape` → runs Firecrawl scraping + returns extracted JSON
+
+Vercel setup:
+
+1. In Vercel, set an env var: `FIRECRAWL_API_KEY`
+2. Deploy the repo (Cursor MCP deploy config is set in `.cursor/mcp.json`)
+3. Test the endpoint:
+   - `curl -X POST https://YOUR_DEPLOY_URL/api/scrape -H "Content-Type: application/json" -d "{\"url\":\"https://memoparis.com\",\"prompt\":\"Extract more data (products, colors, theme, collections, categories, pricing, shipping/returns, etc.)\",\"writeVault\":false}"`
+

@@ -7,7 +7,7 @@
     },
     "deploy": {
       "command": "npx",
-      "args": ["vercel", "--prod"]
+      "args": ["vercel", "deploy", "--prod", "--yes"]
     },
     "shopify": {
       "command": "node",

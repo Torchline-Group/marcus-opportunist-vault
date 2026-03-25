@@ -1,0 +1,15 @@
+node_modules/
+.next/
+/.vercel/
+.vercel/
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.idea/
+.vscode/
+
+# Local env (never commit)
+.env.local
+.env.*.local
+
