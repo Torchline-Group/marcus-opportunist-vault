@@ -11,7 +11,34 @@
 - Deploys live store + domain connect
 - Tracks all ideas in `vault.md`
 
+# MCP's Suggested
+
+- 1. **Firecrawl MCP** (Web Scraper) [.cursor/mcp.json]
+   "scrape-site": {
+     "command": "npx", "args": ["firecrawl-mcp"],
+     "env": {"FIRECRAWL_API_KEY": "your-key"}
+   }
+   → Prompt: "@firecrawl scrape https://target-ecom.com → extract colors/products → generate Shopify theme"
+
+2. **Supabase MCP** (Your DB)
+   → One-prompt RLS tables, Vercel deploys for Vespera portals.
+
+3. **Vercel/Railway MCP** 
+   → "Build Next.js clone → deploy → connect domain" in 1 chat.
+
+4. **Custom E-com MCP** (Your Killer)
+   ```json
+   {
+     "ecom-clone": {
+       "command": "node",
+       "args": ["./mcp/ecom-agent.js"],
+       "inputs": ["url", "products", "shipping"]
+     }
+   }
+
 ### ⚡ Quickstart (2 mins)
 ```bash
 npx create-cursor-opportunist@latest my-vault
 cd
+
+
