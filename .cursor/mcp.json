@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "scraper": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": { "FIRECRAWL_API_KEY": "YOUR_KEY" }
+    },
+    "deploy": {
+      "command": "npx",
+      "args": ["vercel", "--prod"]
+    },
+    "shopify": {
+      "command": "node",
+      "args": ["./scripts/shopify-populate.js"]
+    }
+  }
+}
